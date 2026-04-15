@@ -1,0 +1,24 @@
+schema_version: biodepot.catalog/v0
+id: bioconductor-docker-upstream
+kind: external
+family: bioconductor
+
+image:
+  registry: docker.io
+  repo: bioconductor/bioconductor_docker
+  tag: RELEASE_3_22
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [r, bioconductor]
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  Community-maintained Bioconductor base image. Primary path of the
+  BioDepot two-path policy builds FROM this tag. We don't own or
+  publish it; recorded as external so the catalog graph closes when
+  biodepot/bioc-r declares builds_from.

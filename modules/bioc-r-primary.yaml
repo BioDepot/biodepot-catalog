@@ -1,0 +1,35 @@
+schema_version: biodepot.catalog/v0
+id: bioc-r-primary
+kind: base
+family: bioconductor
+variant: primary
+
+source:
+  repo: BioDepot/biodepot_baseimages
+  path: bioc-r/3.22/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/bioc-r
+  tag: RELEASE_3_22
+  digest: "sha256:d5510e56a17b9bf85f5c5a3a6202b8fa28ebad5378cc7c21bbb83cf256a23a23"
+  tag_parts:
+    version: "3.22"
+    variant: primary
+
+builds_from: bioconductor-docker-upstream
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [r, bioconductor]
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  Primary (community) path of the Bioc two-path policy. Thin wrapper
+  over bioconductor/bioconductor_docker so downstream BioDepot images
+  can pin to biodepot/bioc-r:RELEASE_X_Y regardless of which underlying
+  chain ships them.

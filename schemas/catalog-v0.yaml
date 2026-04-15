@@ -1,0 +1,165 @@
+# biodepot.catalog/v0
+#
+# Authoritative schema for catalog entries under modules/*.yaml. Each
+# entry is one BioDepot (or external) image, identified by a unique id.
+#
+# Field authority legend (see README.md for details):
+#   A = authored     (human-owned, stable)
+#   D = derived      (computed at ingest/build time — do not hand-edit)
+#   S = seeded       (sweep/agent populates; human edits freely)
+
+schema_version: biodepot.catalog/v0
+
+fields:
+
+  id:
+    required: true
+    authority: A
+    type: string
+    description: |
+      Unique stable identifier. Hyphen-separated, lowercase. For
+      multi-variant images use a suffix (-primary, -source) so each
+      variant has its own catalog record.
+
+  kind:
+    required: true
+    authority: A
+    type: enum
+    values: [tier, tool, base, external]
+
+  family:
+    required: false
+    authority: A
+    type: string
+    description: |
+      Loose grouping (bioconductor, alignment, qc, ...). Informational.
+
+  variant:
+    required: false
+    authority: A
+    type: enum
+    values: [primary, source, null]
+    description: |
+      Set on images that ship in multiple parallel build paths (e.g.
+      bioc-r primary vs source). null for single-path images.
+
+  source:
+    required: false  # null for kind=external
+    authority: A
+    fields:
+      repo:    {type: string, description: "owner/name on GitHub"}
+      path:    {type: string, description: "path to Dockerfile in that repo"}
+
+  image:
+    required: true
+    fields:
+      registry: {authority: A, type: string, default: "docker.io"}
+      repo:     {authority: A, type: string, description: "e.g. biodepot/bioc-r"}
+      tag:      {authority: D, type: string, description: "current published tag (derived from build)"}
+      digest:   {authority: D, type: string, description: "sha256:... of current tag"}
+      tag_parts:
+        authority: D
+        description: "Parsed components of image.tag — emitted by tools/tag_parser.py"
+        fields:
+          version: {type: string}
+          base:    {type: string}
+          dockerfile_dir_hash: {type: string}
+          commit:  {type: string}
+          layer_id: {type: string}
+      digest_manifest:
+        authority: A
+        description: "Pointer to the authoritative digest manifest in the source repo"
+        fields:
+          repo: {type: string}
+          path: {type: string}
+
+  builds_from:
+    required: true  # unless kind=external
+    authority: A
+    type: string
+    description: |
+      Another catalog id this image builds FROM. Required on every
+      non-external entry so the base→tier graph is complete and
+      traversable without grepping Dockerfiles. Upstream bases that
+      aren't BioDepot-owned are registered as kind=external entries
+      so this field always points at *some* catalog id.
+
+  upstream:
+    required: false
+    authority: A
+    fields:
+      tracks:  {type: enum, values: [bioconductor-release, dockerhub-tag, github-release, manual]}
+      current: {type: string, description: "What we're currently pinned to"}
+
+  capabilities:
+    required: false
+    authority: A  # seedable from widget metadata where available
+    type: list<string>
+    description: |
+      Tags that describe what the image does (deseq2, fastqc, jupyter).
+      For kind=tool the image name is often enough; for kind=tier a
+      list of the primary packages.
+
+  requires_runtime:
+    required: false
+    authority: A
+    type: list<string>  # catalog ids
+    description: |
+      Other catalog images required at runtime for workflows that use
+      this one (e.g. a widget that needs both an aligner and a
+      post-processor image). Agents may propose additions; humans
+      approve.
+
+  consumers:
+    required: false
+    authority: S
+    type: list<consumer_ref>
+    description: |
+      Where this image is referenced. Seeded by reverse-grep sweep;
+      each item carries source: sweep|human|agent so sweeps only
+      refresh sweep-sourced entries.
+    consumer_ref:
+      fields:
+        kind:   {type: enum, values: [ref, note]}
+        repo:   {type: string, description: "owner/name"}
+        path:   {type: string, description: "path in that repo"}
+        line:   {type: integer, description: "optional line number"}
+        text:   {type: string, description: "free-text note (kind=note)"}
+        source: {type: enum, values: [sweep, human, agent]}
+
+  status:
+    required: true
+    authority: D
+    type: enum
+    values: [active, stale, orphaned, legacy]
+    description: |
+      Derived from curation signals (referenced × pulled). See the
+      runbook §3.4 for the matrix.
+
+  status_computed_at:
+    required: false
+    authority: D
+    type: date
+
+  last_pulled_count:
+    required: false
+    authority: D
+    type: integer
+    description: "From Docker Hub API. Optional."
+
+  smoke_test:
+    required: false
+    authority: A
+    fields:
+      repo: {type: string}
+      path: {type: string}
+
+  maintainer:
+    required: false
+    authority: A
+    type: string
+
+  notes:
+    required: false
+    authority: A
+    type: string

@@ -1,0 +1,35 @@
+schema_version: biodepot.catalog/v0
+id: biodepot-rbase
+kind: base
+family: r
+
+source:
+  repo: BioDepot/biodepot_baseimages
+  path: r/r-4.5.2-bookworm-slim/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/rbase
+  tag: "4.5.2__bookworm-slim"
+  tag_parts:
+    version: "4.5.2"
+    base: "bookworm-slim"
+
+builds_from: debian-bookworm-slim-upstream
+
+upstream:
+  tracks: manual
+  current: "4.5.2"
+
+capabilities: [r, blas, lapack]
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  BioDepot source-built R with explicit BLAS/LAPACK via `make -j 8`
+  on debian:bookworm-slim. Two roles:
+    - base for biodepot/bioc-r-source (the Bioc two-path fallback)
+    - base for biodepot/jupyter-base (non-Bioc Python+R workflows)
+  Version tracks whatever R major/minor is required by the current
+  primary Bioc release for parity.

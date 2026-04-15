@@ -1,0 +1,27 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pyyaml
+        run: pip install pyyaml
+      - name: Validate catalog
+        run: python3 tools/validate.py
+      - name: Smoke-test tag parser
+        run: |
+          python3 tools/tag_parser.py RELEASE_3_22 --json
+          python3 tools/tag_parser.py RELEASE_3_22-source --json
+          python3 tools/tag_parser.py "2.6.0c__bookworm-slim__4df49ea8__07281ffb__2ca6eea3" --json
+          python3 tools/tag_parser.py "quay.io/biocontainers/fastqc:0.11.9--0" --json

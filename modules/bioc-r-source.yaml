@@ -1,0 +1,36 @@
+schema_version: biodepot.catalog/v0
+id: bioc-r-source
+kind: base
+family: bioconductor
+variant: source
+
+source:
+  repo: BioDepot/biodepot_baseimages
+  path: bioc-r/3.22-source/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/bioc-r
+  tag: RELEASE_3_22-source
+  digest: "sha256:dcdd08465f82c67bbcce03a0eb7ced3b4c6c4cea3adcb38374cfab292394525b"
+  tag_parts:
+    version: "3.22"
+    variant: source
+
+builds_from: biodepot-rbase
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [r, bioconductor, source-build]
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  Fallback (source-build) path of the Bioc two-path policy. Builds
+  Bioc 3.22 on top of BioDepot's source-built R (biodepot/rbase),
+  owned end-to-end by BioDepot with no upstream dependency. Use when
+  the community chain is broken, when BLAS/LAPACK behavior diverges,
+  or when reproducibility requires a BioDepot-controlled toolchain.

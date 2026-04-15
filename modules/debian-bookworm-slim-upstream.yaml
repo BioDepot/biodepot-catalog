@@ -1,0 +1,20 @@
+schema_version: biodepot.catalog/v0
+id: debian-bookworm-slim-upstream
+kind: external
+
+image:
+  registry: docker.io
+  repo: library/debian
+  tag: bookworm-slim
+
+upstream:
+  tracks: dockerhub-tag
+  current: bookworm-slim
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  Upstream Debian base used by biodepot/rbase. Recorded as external
+  so builds_from edges from BioDepot bases terminate at a cataloged
+  node instead of a bare string.

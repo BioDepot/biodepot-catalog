@@ -1,0 +1,35 @@
+schema_version: biodepot.catalog/v0
+id: jupyter-bioc-r-source
+kind: tier
+family: bioconductor
+variant: source
+
+source:
+  repo: BioDepot/biodepot_baseimages
+  path: jupyter-bioc-r/3.22-source/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/jupyter-bioc-r
+  tag: RELEASE_3_22-source
+  digest: "sha256:4dbf0323cadcf34f16df3e0cf9cfd12182862937975ffae120e903d36f3b513d"
+  tag_parts:
+    version: "3.22"
+    variant: source
+
+builds_from: bioc-r-source
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [jupyter, irkernel, r, bioconductor, source-build]
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  Jupyter + IRkernel on the source-build Bioc base. Mirrors the
+  primary variant's install pattern for parity; differs only in base
+  image lineage. Use when the community chain is broken or a
+  source-built toolchain is required.

@@ -1,0 +1,40 @@
+schema_version: biodepot.catalog/v0
+id: bioc-bulk-rna
+kind: tier
+family: bioconductor
+
+source:
+  repo: BioDepot/bwb-bioc-images
+  path: docker/bioc-bulk-rna/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/bioc-bulk-rna
+  tag: RELEASE_3_22
+  digest: "sha256:b6e0a8fe62823232cf6729d79e06996d80722e3a140930d0da6c5b17bad3a5da"
+  tag_parts:
+    version: "3.22"
+    variant: primary
+  digest_manifest:
+    repo: BioDepot/bwb-bioc-images
+    path: manifests/bioc_image_digests.yaml
+
+builds_from: bioconductor-docker-upstream
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [deseq2, edger, limma, volcano, complexheatmap, bulk-rna]
+
+status: active
+status_computed_at: 2026-04-15
+
+smoke_test:
+  repo: BioDepot/bwb-bioc-images
+  path: docker/bioc-bulk-rna/smoke_test.R
+
+notes: |
+  Curated tier for bulk RNA-seq differential expression and
+  visualization. Builds FROM the community Bioc base directly (not
+  FROM biodepot/bioc-r) pending a layering refactor.

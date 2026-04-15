@@ -1,0 +1,34 @@
+schema_version: biodepot.catalog/v0
+id: jupyter-bioc-r-primary
+kind: tier
+family: bioconductor
+variant: primary
+
+source:
+  repo: BioDepot/biodepot_baseimages
+  path: jupyter-bioc-r/3.22/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/jupyter-bioc-r
+  tag: RELEASE_3_22
+  digest: "sha256:d1eda16e066fe40a7ed465c4bc761671ab57f2d08cc85502803804ec935974a1"
+  tag_parts:
+    version: "3.22"
+    variant: primary
+
+builds_from: bioc-r-primary
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [jupyter, irkernel, r, bioconductor]
+
+status: active
+status_computed_at: 2026-04-15
+
+notes: |
+  Jupyter + IRkernel on the primary Bioc base. Headless; serves over
+  HTTP to the host browser (no in-container GUI). IRkernel installed
+  from CRAN with installspec(user = FALSE) so the kernel is system-wide.

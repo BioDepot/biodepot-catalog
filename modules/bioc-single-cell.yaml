@@ -1,0 +1,35 @@
+schema_version: biodepot.catalog/v0
+id: bioc-single-cell
+kind: tier
+family: bioconductor
+
+source:
+  repo: BioDepot/bwb-bioc-images
+  path: docker/bioc-single-cell/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/bioc-single-cell
+  tag: RELEASE_3_22
+  digest: "sha256:820f62c12c4028d063c1b1d6c87571813bd66e1c243f33ccca8a297542660c41"
+  tag_parts:
+    version: "3.22"
+    variant: primary
+  digest_manifest:
+    repo: BioDepot/bwb-bioc-images
+    path: manifests/bioc_image_digests.yaml
+
+builds_from: bioconductor-docker-upstream
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [seurat, scater, scran, singler, celldex, single-cell]
+
+status: active
+status_computed_at: 2026-04-15
+
+smoke_test:
+  repo: BioDepot/bwb-bioc-images
+  path: docker/bioc-single-cell/smoke_test.R

@@ -1,0 +1,40 @@
+schema_version: biodepot.catalog/v0
+id: bioc-bridges
+kind: tier
+family: bioconductor
+
+source:
+  repo: BioDepot/bwb-bioc-images
+  path: docker/bioc-bridges/Dockerfile
+
+image:
+  registry: docker.io
+  repo: biodepot/bioc-bridges
+  tag: RELEASE_3_22
+  digest: "sha256:d70253b796b8c9ce8222caf09ffbb3ca0f5c406493ea330fa0a13344a2ff1f47"
+  tag_parts:
+    version: "3.22"
+    variant: primary
+  digest_manifest:
+    repo: BioDepot/bwb-bioc-images
+    path: manifests/bioc_image_digests.yaml
+
+builds_from: bioconductor-docker-upstream
+
+upstream:
+  tracks: bioconductor-release
+  current: "3.22"
+
+capabilities: [summarizedexperiment, singlecellexperiment, seurat, conversion, bridges]
+
+status: active
+status_computed_at: 2026-04-15
+
+smoke_test:
+  repo: BioDepot/bwb-bioc-images
+  path: docker/bioc-bridges/smoke_test.R
+
+notes: |
+  Cross-ecosystem conversion tier: moves objects between bulk
+  SummarizedExperiment, Bioconductor SingleCellExperiment, and
+  Seurat. Used when recipes explicitly convert between ecosystems.
